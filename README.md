@@ -10,7 +10,7 @@
 
 ## Instalação dos Requisitos:
 - [Django](#django)
-- [Django Framework](#djangoframework)
+- [Django Rest Framework](#djangoframework)
 - [Requests](#Requests)
 - [Beautiful Soup](#soup)
 - [Django Signals](#signals)
@@ -109,4 +109,16 @@ E assim pode-se ser iniciado o projeto django usando o comando:
 ```
     django-admin startproject nomedoprojeto
 ```
+
+<p align="center">
+    <br>
+    <a href="https://docs.djangoproject.com/pt-br/2.1/"><strong>Explore a Documentação do Django »</strong></a>
+    <br>
+    <br>
+  </p>
+</p>
+
+## Django Rest Framework
+
+
 
