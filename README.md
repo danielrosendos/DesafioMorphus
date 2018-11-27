@@ -17,7 +17,9 @@ A Tarefa é criar uma API simples, apenas para consulta de dados, as informaçõ
 Objetivo:
 
 1 - O sistema deve ser alimentado com uma categoria de filme (Adventure, Family, Fantasy, ...).
+
 2 - O sistema deve criar um processo periódico e assíncrono para cada categoria cadastrada, onde esse processo vai realizar a raspagem de dados da categoria configurada e trazer as informações dos filmes encontrados.
+
 3 - O sistema deve oferecer uma API para consulta dos dados no seguinte padrão:
 
 Ex:
