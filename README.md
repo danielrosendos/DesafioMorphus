@@ -6,11 +6,11 @@
   </a>
 
 ## Explicação do Desafio - Morphus:
-- [Desafio Dev Team Morphus](#explicacaodesafio)
+- [Desafio Dev Team Morphus](#Desafio Dev Team Morphus)
 
 ## Instalação dos Requisitos:
 - [Django](#django)
-- [Django Rest Framework](#djangorestframework)
+- [Django Rest Framework](#Django Rest Framework)
 - [Requests](#Requests)
 - [Beautiful Soup](#soup)
 - [Django Signals](#signals)
