@@ -10,7 +10,7 @@
 
 ## Instalação dos Requisitos:
 - [Django](#django)
-- [Django Rest Framework](#djangoframework)
+- [Django Rest Framework](#djangorestframework)
 - [Requests](#Requests)
 - [Beautiful Soup](#soup)
 - [Django Signals](#signals)
