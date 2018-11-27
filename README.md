@@ -8,6 +8,18 @@
 ## Explicação do Desafio - Morphus:
 - [Desafio Dev Team Morphus](#explicacaodesafio)
 
+## Instalação dos Requisitos:
+- [Django](#django)
+- [Django Framework](#djangoframework)
+- [Requests](#Requests)
+- [Beautiful Soup](#soup)
+- [Django Signals](#signals)
+- [Celery](#celery)
+
+## Implementação e Exeperiencia:
+- [Implementacao](#implementacao)
+- [Experiencia](#experiencia)
+
 ## Desafio Dev Team Morphus
 
 Sistema para Monitoramento de dados de Filmes do IMDB
@@ -60,3 +72,4 @@ Tecnologias:
 - Request
 - Beautiful Soup
 
+## Django
