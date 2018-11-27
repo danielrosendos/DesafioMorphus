@@ -120,5 +120,20 @@ E assim pode-se ser iniciado o projeto django usando o comando:
 
 ## Django Rest Framework
 
+A Django Rest Framework é uma blibioteca Django que viabiliza de forma simples a criação de APIS REST em projetos django usando de meios já conhecidos dos desenvolvedores para proporcionar produtividade na criação das APIS.
 
+Com o django devidamente instalado e com a virtual env iniciada para instalar o django rest framework basta digitar no terminal o comando:
+
+```
+pip install djangorestframework
+```
+
+E referenciar o django dentro do settings do django
+
+```
+INSTALLED_APPS = (
+    ...
+    'rest_framework',
+)
+```
 
