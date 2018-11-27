@@ -45,8 +45,11 @@ Ex:
 Observações:
 
 1 - A configuração das categorias deve ser feita pelo Django Admin, utilizar o recurso Django Signals para acionar a task assíncrona.
+
 2 - O sistema de tasks assíncronas, pode ser feito com as bibliotecas Celery e Celery Beat, Django crontab ou Scrapy.
+
 3 - O sistema de varredura de dados pode ser feito utilizando as bibliotecas Requests e Beautiful Soup ou ferramentas do linux como o CURL, WGET e aplicar algumas consulta de strings ou regex.
+
 4 - A entrega deve ser feita em algum repositório de sua preferencia e compartilhado o link por e-mail
 
 Tecnologias:
