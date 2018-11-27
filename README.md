@@ -80,33 +80,33 @@ A instalação do django é bastante simples, dependendo da plataforma (Windows,
 
 Para iniciar o django é preciso criar uma virtual env, então basta digitar o comando abaixo:
 
-{
+```
     windows: python -m venv venv
     linux/mac: python3 -m venv venv
-}
+```
 
 Ative a virtual env
 
-{
+```
     windows: venv\Scripts\activate
     linux/mac: . venv/bin/activate
-}
+```
 
 Ativada a virtual env, atualizamos o commando pip
 
-{
+```
     python -m pip install --upgrade pip
-}
+```
 
 Por fim instalamos o django
 
-{
+```
     pip install django
-}
+```
 
 E assim pode-se ser iniciado o projeto django usando o comando:
 
-{
+```
     django-admin startproject nomedoprojeto
-}
+```
 
