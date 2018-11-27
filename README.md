@@ -186,6 +186,7 @@ INSTALLED_APPS = [
 ```
 
 - Model categoriaIMDB: O nosso modelos é bem simples e é feito da seguinte forma
+
 ```
 from django.db import models
 from django.contrib.auth.models import User
@@ -206,5 +207,40 @@ from django.contrib import admin
 from .models import Categorias
 
 admin.site.register(Categorias)
+```
+
+- filmeCategoria:
+
+O modelos é composto da seguinte forma:
 
 ```
+from django.db import models
+
+class FilmeCategoria(models.Model):
+    link = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
+    year = models.CharField(max_length=255)
+    categories = models.CharField(max_length=255)
+    director = models.CharField(max_length=150)
+    duration = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.title
+```
+
+Composto pelo link do filme, o titulo, o ano do filme, a categoria do filme, o diretor do filme e a duraçao do filme. E é adicionado também no arquivo admin, para o painel django admin encontrar nosso modelos
+
+```
+from django.contrib import admin
+from .models import FilmeCategoria
+
+admin.site.register(FilmeCategoria)
+```
+
+Feito isso, damos um novo makemigrations e migrate e criaremos um usuario admin para podermos ter acesso ao djago admin
+
+```
+python manage.py createsuperuser
+```
+
+Com isso nossa interface básica já esta criada para adicionarmos novas categorias e novos filmes.
