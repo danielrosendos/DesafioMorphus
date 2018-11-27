@@ -137,3 +137,10 @@ INSTALLED_APPS = (
 )
 ```
 
+<p align="center">
+    <br>
+    <a href="https://www.django-rest-framework.org/"><strong>Explore a Documentação do Django rest Framework»</strong></a>
+    <br>
+    <br>
+  </p>
+</p>
