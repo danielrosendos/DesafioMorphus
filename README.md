@@ -73,3 +73,40 @@ Tecnologias:
 - Beautiful Soup
 
 ## Django
+
+Django é um framework para desenvolvimento rápido para web, escrito em Python, que utiliza o padrão model-template-view. Foi criado originalmente como sistema para gerenciar um site jornalístico na cidade de Lawrence, no Kansas. Tornou-se um projeto de código aberto e foi publicado sob a licença BSD em 2005
+
+A instalação do django é bastante simples, dependendo da plataforma (Windows, Linux ou Mac) o comando pode ser diferente, no windows ajustado e configura o Path o comando é python, para outras plataformas é python3, já que utilizaremos o python 3.5+.
+
+Para iniciar o django é preciso criar uma virtual env, então basta digitar o comando abaixo:
+
+{
+    windows: python -m venv venv
+    linux/mac: python3 -m venv venv
+}
+
+Ative a virtual env
+
+{
+    windows: venv\Scripts\activate
+    linux/mac: . venv/bin/activate
+}
+
+Ativada a virtual env, atualizamos o commando pip
+
+{
+    python -m pip install --upgrade pip
+}
+
+Por fim instalamos o django
+
+{
+    pip install django
+}
+
+E assim pode-se ser iniciado o projeto django usando o comando:
+
+{
+    django-admin startproject nomedoprojeto
+}
+
