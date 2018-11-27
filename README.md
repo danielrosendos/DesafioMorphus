@@ -124,7 +124,7 @@ Com o django devidamente instalado e com a virtual env iniciada para instalar o 
 pip install djangorestframework
 ```
 
-E referenciar o django dentro do settings do django
+E referenciar o django rest dentro do settings do django
 
 ```
 INSTALLED_APPS = (
@@ -244,3 +244,241 @@ python manage.py createsuperuser
 ```
 
 Com isso nossa interface básica já esta criada para adicionarmos novas categorias e novos filmes.
+
+Após isso é instalado o django rest framework utilizando seus comando de instalação
+
+```
+pip install djangorestframework
+```
+
+E referenciar o django rest dentro do settings do django
+
+```
+INSTALLED_APPS = (
+    ...
+    'rest_framework',
+)
+```
+
+E atualizamos nosso arquivos de url para termos os links e acessos a nossa api
+
+```
+from django.contrib import admin
+from django.conf.urls import include
+from rest_framework import routers
+from django.urls import path
+from categoriaIMDB.api.viewsets import CategoriasViewSet
+from filmeCategoria.api.viewsets import FilmeCategoriaViewSet
+
+router = routers.DefaultRouter()
+router.register(r'categorias', CategoriasViewSet)
+router.register(r'filme', FilmeCategoriaViewSet)
+
+urlpatterns = [
+    path('', include(router.urls)),
+    path('admin/', admin.site.urls),
+]
+```
+
+Para cada APP criado (categoriaIMDB, filmeCategoria) criamos uma pasta api, onde lá teremos a estrutura de nossa api, onde será encontrado os arquivos serializers.py e viewsets.py
+
+- categoria IMDB
+
+```
+#viewsets.py
+from rest_framework.viewsets import ModelViewSet
+from categoriaIMDB.models import Categorias
+from .serializers import CategoriasSerializer
+
+class CategoriasViewSet(ModelViewSet):
+    queryset = Categorias.objects.all()
+    serializer_class = CategoriasSerializer
+```
+
+Criação do viewset, onde as informação são puxadas e mostradas
+
+```
+##serializers.py
+from rest_framework.serializers import ModelSerializer
+from categoriaIMDB.models import Categorias
+
+class CategoriasSerializer(ModelSerializer):
+    class Meta:
+        model = Categorias
+        fields = [
+            'id', 'categories'
+        ]
+```
+
+Serialização onde decidimos quais campos serão mostrados e recuperados pela api
+
+- filmeCategoria
+
+```
+#viewsets.py
+from rest_framework.viewsets import ModelViewSet
+from filmeCategoria.models import FilmeCategoria
+from .serializers import FilmeCategoriaSerializer
+
+class FilmeCategoriaViewSet(ModelViewSet):
+    queryset = FilmeCategoria.objects.all()
+    serializer_class = FilmeCategoriaSerializer
+```
+
+```
+#serializers.py
+from rest_framework.serializers import ModelSerializer
+from filmeCategoria.models import FilmeCategoria
+
+class FilmeCategoriaSerializer(ModelSerializer):
+    class Meta:
+        model = FilmeCategoria
+        fields = [
+            'link', 'title', 'year', 'categories', 'director', 'duration'
+        ]
+```
+
+Interface da api pronta.
+
+Para fazer a raspagem dos dados do IMDB utilizei Request e BeautifulSoup para este trabalho
+
+```
+from requests import get
+from bs4 import BeautifulSoup
+import re
+import json
+```
+
+Bibliotecas importadas
+
+Basicamente o algoritmo de raspagem dos dados começa da função abaixo:
+
+```
+def links(genrs):
+    # url de inicio da varredura
+    url = 'https://www.imdb.com/search/title?genres=fantasy&explore=title_type,genres&ref_=tt_ov_inf'
+    response = get(url)
+    html_soup = BeautifulSoup(response.text, 'html.parser')
+
+    ##Pegando as categorias de filmes no site
+    categoria_filmes = html_soup.find_all('div', class_='aux-content-widget-2')
+    categoria_filmes = categoria_filmes[1].find_all('a')
+
+    # Pegando o link da categoria
+    for categoria in categoria_filmes:
+        if categoria.text == genrs:
+            link = categoria.attrs['href']
+
+    # link da categoria
+    url = 'https://www.imdb.com/' + link
+    response = get(url)
+    html_soup = BeautifulSoup(response.text, 'html.parser')
+    mv_containers = html_soup.find_all('div', class_='lister-item mode-advanced')
+    teste = html_soup.find('div', class_='desc')
+
+    return json.dumps(dados(mv_containers, teste))
+```
+
+A função recebe o genero da categoria, inicia pela url onde do lado direito o IMDB faz a filtragem dos filmes ou series por genero, é coletado os textos e links dessa sessão do site, e é pecorrido por essa sessão, ao achar a sessão der match, pegamos o link da sessão e passamos essa sessão para ser recuperado esses dados, na função dados
+
+```
+def dados(mv_containers, teste):
+    filme = {
+        'link': 'string', 'title': 'string', 'year': 'int', 'categories': 'string',
+        'director': 'string', 'duration': 'string'
+    }
+
+    info = []
+
+    for x in range(1):
+        for container in mv_containers:
+            url = 'https://www.imdb.com/' + container.h3.a.attrs['href']
+            response = get(url)
+            soup = BeautifulSoup(response.text, 'html.parser')
+
+            filme['link'] = url
+            filme['title'] = container.h3.a.text
+            filme['year'] = get_ano(soup)
+            filme['categories'] = get_genero(soup)
+            filme['director'] = get_diretor(soup)
+            filme['duration'] = pegaDuracao(soup)
+
+            info.append(filme)
+
+
+        link = teste.find('a', class_='lister-page-next next-page')
+        url = 'https://www.imdb.com/' + link.attrs['href']
+        response = get(url)
+        html_soup = BeautifulSoup(response.text, 'html.parser')
+        mv_containers = html_soup.find_all('div', class_='lister-item mode-advanced')
+        teste = html_soup.find('div', class_='desc')
+
+    return info
+```
+
+Basicamente o que essa função faz é, pega o link do gereno escolhido, como por ex: https://www.imdb.com/search/title?genres=fantasy&genres=Fantasy&explore=title_type,genres&ref_=adv_explore_rhs, acessa filme por filme dessa seção e passa para a próxima página pegando link de filme por filme de cada sessão.
+Ex: de link da proxima sessão https://www.imdb.com/search/title?genres=fantasy&start=51&explore=title_type,genres&ref_=adv_nxt, https://www.imdb.com/search/title?genres=fantasy&start=101&explore=title_type,genres&ref_=adv_nxt, mudando o numero da pagina 51 pra 101 e assim por diante. Claro que varrer tudo seria custoso, eu limitei para ir só até a segunda pagina. Caso quisesse que pecoresse tudo, basta no for primario pecorrer as páginas até que o botão next seja inexistente.
+
+O link do filme já é pego pela url que é varrida, o titulo é pegado também pelo mesmo container.
+
+O ano é pegado pela função ano:
+
+```
+def get_ano(soup):
+    ano = soup.select("a[href*=/year/]")
+    if len(ano):
+        return int(ano[0].text)
+    else:
+        return None
+```
+
+Pegando a referencia pelo link que contenha a palavra year
+
+Categoria é pego pela função get_genero
+
+```
+def get_genero(soup):
+    genero = soup.find('div', {'id': 'titleStoryLine'})
+    genero = genero.select("a[href*=/search/title?genres]")
+    if genero != None:
+        return [a.text for a in genero]
+    else:
+        return None
+```
+
+Onde ele pega a sessão storyline, e depois seleciona os textos que estão sendo registrados por title?genres
+
+Diretor e pegar duração pelo mesmo principio
+
+```
+def get_diretor(soup):
+    diretor = soup.find('div', attrs={'class': re.compile("^credit_summary_item")})
+    diretor = [elemento.get_text() for elemento in diretor.find_all(re.compile(r'(a)'))]
+    if diretor != None:
+        return diretor
+    else:
+        return None
+
+
+def pegaDuracao(soup):
+    durFilme = soup.find('div', {'id': 'titleDetails'})
+    durFilme = durFilme.find('time')
+    if durFilme != None:
+        string = durFilme.text
+        return string
+    else:
+        return None
+```
+
+Por fim é retornado um json
+
+Ainda faltou implementar algumas coisas como django signals e celery para as tasks assincronas. 
+
+
+## Experiencia
+
+Inicialmente gostaria de agradecer a morphus pela oportunidade, ganhei uma basta experiencia fazendo esse desafio, mesmo não estando 100% completo (até peço desculpas por não ter terminado 100%), mas consegui agregar muitos conhecimentos a qual eu não conhecia muito bem, foi bastante divertido quebrar a cabeça em como raspar os dados do site do IMDB, a criar aplicações django e rest api. Obiamente esse desafio continuarei estudando para completa-lo 100%, estudando e aprendendo. Novamente agradecer pela oportunidade é sempre bom estudar e agregar conhecimento, agradecer também ao Leonardo por ter dado também essa oportunidade. 
+
+Não tinha muito conhecimento sobre django, conhecia claro a linguagem mas não muito especifico, mas com a vinda do desafio aprendi a utilizar a framework achei ela bastante versatil em relação a outras frameworks que utilizo atualmente (laravel), muito provavelmente começe a criar novos projetos utilizando a linguagem, criação de uma API, conhecia API somente pelos links de API coisas prontas, mas não em como construir uma, foi bastante interessante aprender a criar em partes uma API, e até como é simples entender o seu conceito e seu funcionamento e a parte que achei mais interessante, divertida e estressante foi a raspagem dos dados do site do IMDB, ter esse conhecimento me fez criar um novo leque de oportunidades para projetos futuros, até mesmo academicos para criação e analise de dados, utilizando já conhecimentos da cadeira de machine learn, então essa parte de como obter dados foi bastante boa para mim e por fim a parte que tive mais dificuldade foi no django signals e celery onde não entendi muito bem o seu funcionamento e como utilizar, mas continuo lendo e tentando aprender a utilizar.
+
+E meus agradecimentos a todos da Morphus. 
