@@ -8,13 +8,9 @@
 ## Explicação do Desafio - Morphus:
 - [Desafio Dev Team Morphus](#Desafio Dev Team Morphus)
 
-## Instalação dos Requisitos:
+## Instalação Django e Django Rest Framework:
 - [Django](#django)
 - [Django Rest Framework](#Django Rest Framework)
-- [Requests](#Requests)
-- [Beautiful Soup](#soup)
-- [Django Signals](#signals)
-- [Celery](#celery)
 
 ## Implementação e Exeperiencia:
 - [Implementacao](#implementacao)
@@ -144,3 +140,71 @@ INSTALLED_APPS = (
     <br>
   </p>
 </p>
+
+## Implementação
+
+Como principio, foi instalado o framework Django, na pasta do projeto DesafioMorphus2.0:
+
+```
+Instalando a virtual env: python -m venv venv
+Iniciando a virtual env: venv\Script\Activate
+Atualizando o pip: python -m pip install --upgrade pip
+Instalando o django: pip install django
+Iniciando o projeto: django-admin startproject DesafioMorphus .
+```
+
+A partir dai é feita as migrations para ser criado o banco sqlite e inicialização do server para saber se tudo está funcionando
+
+```
+makemigrations: python manage.py makemigrations
+migrate: python manage.py migrate
+runserver: python manage.py runserver
+```
+
+O servidor é iniciado no localhost porta 8000, caso tudo esteja funcionando apareceça a tela inicial do django.
+
+A Partir dai começamos a criar nossos modelos, o categoria IMDB e filmeCategoria, o categoriaIMDB servirá como o inicializador, lá será onde adicionaremos nossas categorias e no filmeCategoria será onde os filmes peggados do IMDB seram salvos.
+
+```
+categoriaIMDB: python manage.py startapp categoriaIMDB
+filmeCategoria: python manage.py startapp filmeCategoria
+```
+
+Adicionamos esses dois apps no settings do django
+
+```
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'categoriaIMDB',
+    'filmeCategoria',
+]
+```
+
+- Model categoriaIMDB: O nosso modelos é bem simples e é feito da seguinte forma
+```
+from django.db import models
+from django.contrib.auth.models import User
+
+class Categorias(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    categories = models.CharField(max_length=150)
+    data = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.categories
+```
+
+Possui o usuario que adiciona, a categoria que queremos colocar e a data que foi adicionada de forma de auto incrementada. E adicionamos esse novo model em admin.py da pasta categoriaIMDB
+
+```
+from django.contrib import admin
+from .models import Categorias
+
+admin.site.register(Categorias)
+
+```
